@@ -1,4 +1,4 @@
-<title>Dopa-Loop</title>
+c<title>Dopa-Loop</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Chivo:wght@400;600;700;900&family=DM+Mono:wght@400;500&display=swap">
@@ -96,6 +96,7 @@ button{font-family:inherit;color:inherit;cursor:pointer}
   background:linear-gradient(180deg,var(--ink-2),rgba(23,20,28,.86));
   position:relative;z-index:20;
 }
+.update-badge{margin-left:8px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.04);font-family:var(--mono);font-size:11px;color:var(--muted);}
 .wordmark{
   font-family:var(--display);font-size:19px;letter-spacing:-.03em;text-transform:uppercase;
   margin-right:auto;display:flex;align-items:center;gap:7px;
@@ -362,8 +363,14 @@ h2.sec{font-family:var(--display);font-size:14px;letter-spacing:.02em;text-trans
   display:flex;align-items:flex-end;justify-content:space-between;gap:12px;
   margin-top:22px;padding-top:16px;border-top:1px solid var(--line-soft);
 }
+.price-stack{display:flex;flex-direction:column;gap:4px}
 .price-line .p{font-family:var(--display);font-size:34px;letter-spacing:-.03em;line-height:1}
 .price-line .p s{font-family:var(--mono);font-size:13px;color:var(--muted-2);margin-left:8px;letter-spacing:0}
+.discount-note{
+  font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--diverted);background:rgba(55,201,138,.1);border:1px solid rgba(55,201,138,.3);
+  border-radius:999px;padding:4px 8px;display:inline-flex;align-items:center;align-self:flex-start;
+}
 .price-line .r{text-align:right;font-family:var(--mono);font-size:10.5px;color:var(--muted);line-height:1.5}
 
 /* ---------- reveal overlay ---------- */
@@ -493,13 +500,38 @@ h2.sec{font-family:var(--display);font-size:14px;letter-spacing:.02em;text-trans
   transition:all .16s ease;
 }
 .chip.on{background:var(--paper);color:#140F1A;border-color:var(--paper);font-weight:500}
+.mini-look-strip{
+  display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));gap:10px;margin:12px 0 0;
+}
+/* Hide the legacy top photo preview row to avoid duplicate visuals */
+.mini-look-strip{display:none !important}
+}
+.mini-look-card{
+  border-radius:14px;overflow:hidden;border:1px solid var(--line-soft);background:var(--surface);
+  display:flex;flex-direction:column;min-width:0;
+}
+.mini-look-card .img{
+  height:118px;background-size:cover;background-position:center;background-repeat:no-repeat;position:relative;
+  background-color:#171320;
+}
+.mini-look-card .meta{padding:8px 8px 9px}
+.mini-look-card .meta .name{font-size:10.5px;line-height:1.25;letter-spacing:-.01em;color:var(--paper);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
 .mk-card{
   border-radius:15px;overflow:hidden;border:1px solid var(--line-soft);background:var(--surface);
   display:flex;flex-direction:column;animation:posIn .35s backwards;
 }
-.mk-card .art{height:124px;display:grid;place-items:center;border-bottom:1px solid var(--line-soft);position:relative}
+.mk-card .art{height:124px;display:grid;place-items:center;border-bottom:1px solid var(--line-soft);position:relative;background-size:cover;background-position:center;background-repeat:no-repeat}
 .mk-card .art svg{height:104px;width:auto}
+.mk-card .catalog-art{
+  background-color:#1b1821;background-size:cover;background-position:center center;background-repeat:no-repeat;
+  filter:saturate(1.08) contrast(1.06) brightness(1.02);
+}
+.mk-card .catalog-art::after{
+  content:"Curated design";position:absolute;left:8px;bottom:8px;z-index:1;
+  padding:4px 7px;border-radius:999px;background:rgba(16,14,20,.42);border:1px solid rgba(255,255,255,.14);
+  font-family:var(--mono);font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--paper);
+}
 .mk-card .sz{position:absolute;top:7px;right:7px;font-family:var(--mono);font-size:9.5px;padding:2px 6px;border-radius:5px;background:rgba(16,14,20,.75);border:1px solid var(--line);color:var(--muted)}
 .mk-card .yours{position:absolute;top:7px;left:7px;font-family:var(--mono);font-size:8.5px;letter-spacing:.1em;padding:2px 6px;border-radius:5px;background:var(--diverted);color:#08251A}
 .mk-card .cap{padding:10px 11px 12px;display:flex;flex-direction:column;gap:8px;flex:1}
@@ -816,6 +848,7 @@ h2.sec{font-family:var(--display);font-size:14px;letter-spacing:.02em;text-trans
 
     <header class="topnav">
       <div class="wordmark"><span class="loop"></span>Dopa-Loop</div>
+      <div class="update-badge" id="updateBadge">Updated: 2026-09-05 06:45 UTC</div>
       <button class="streak-badge" id="streakBadge" aria-label="Streak tracker">
         <span class="fl">&#128293;</span><span id="streakDays">12</span>
       </button>
@@ -842,91 +875,90 @@ h2.sec{font-family:var(--display);font-size:14px;letter-spacing:.02em;text-trans
           <div class="ticker" id="ticker"></div>
         </div>
 
-        <div class="sec-head"><h2 class="sec">Active Drop</h2><span class="hint" id="entrantCount">312 watching</span></div>
+        <div class="sec-head"><h2 class="sec">Seasonal boxes</h2><span class="hint" id="entrantCount">Limited runs</span></div>
 
-        <article class="drop-card">
-          <div class="drop-art">
-            <div class="glow"></div>
-            <span class="live-chip"><i></i>Live now</span>
-            <span class="batch-chip">Micro-batch · 180 units</span>
-            <div id="heroArt"></div>
+        <div class="row-card gate" style="margin-top:0">
+          <div class="icon-tile">&#127874;</div>
+          <div class="lead">
+            <div class="t">Autumn archive box</div>
+            <div class="d">3 days left &middot; 42 pieces &middot; only members with a 7+ day loyalty streak can unlock.</div>
           </div>
-          <div class="drop-body">
-            <h3 class="drop-title">Overrun Fleece 001</h3>
-            <p class="drop-meta">Boxy hoodie &middot; 82% recovered deadstock &middot; 18% post-consumer PET</p>
-            <div class="countdown" id="cdHome">
-              <div class="cd-unit"><b>00</b><span>Hrs</span></div>
-              <div class="cd-unit"><b>00</b><span>Min</span></div>
-              <div class="cd-unit"><b>00</b><span>Sec</span></div>
-            </div>
-          </div>
-        </article>
+          <div class="val" style="font-family:var(--mono);font-size:11px;color:var(--flame)">42 left</div>
+        </div>
 
-        <div class="flash">
-          <span class="bolt">&#9889;</span>
-          <div>
-            <div class="t">Flash window &middot; rescued inventory</div>
-            <div class="d">47 units rescued from a cancelled wholesale order. Once they&rsquo;re placed, this batch is gone &mdash; there is no restock of deadstock.</div>
+        <div class="row-card" style="margin-top:10px">
+          <div class="icon-tile">&#127881;</div>
+          <div class="lead">
+            <div class="t">Winter capsule</div>
+            <div class="d">12 pieces &middot; color-matched archive from last cold season.</div>
           </div>
-          <span class="cd" id="flashCd">14:22</span>
+          <div class="val" style="font-family:var(--mono);font-size:11px;color:var(--muted)">Waitlist</div>
         </div>
 
         <div class="cta-dock">
-          <button class="btn" id="enterDrop">Enter Drop</button>
-          <p class="cta-sub" id="homeCtaSub">Day 12 streak &middot; 1.60&times; luck multiplier &middot; 480 EC or $48</p>
+          <button class="btn" id="enterDrop">Browse archive</button>
+          <p class="cta-sub" id="homeCtaSub">Month 12 loyalty &middot; 1.60&times; access boost &middot; seasonal drops stay limited</p>
         </div>
 
-        <div class="sec-head"><h2 class="sec">Track the Loop</h2><span class="hint">Live</span></div>
-        <button class="track-card" id="trackCard">
-          <div class="loop-ring" id="homeRing"></div>
-          <div>
-            <div class="t">Your return, stage by stage</div>
-            <div class="d" id="trackSummary">Deadstock Ash hoodie &middot; batch 05</div>
-            <span class="now"><i></i><span id="trackStageChip">Repurposing</span></span>
-          </div>
-        </button>
-
-        <div class="sec-head"><h2 class="sec">Queued Next</h2><span class="hint">2 batches</span></div>
+        <div class="sec-head"><h2 class="sec">Member impact</h2><span class="hint">Loop status</span></div>
         <div class="row-card">
-          <div class="icon-tile">&#129530;</div>
-          <div class="lead"><div class="t">Sorted Toy Cargo 002</div><div class="d">Recycled HDPE hardware &middot; needs 240 lbs more</div></div>
-          <div class="val" style="font-family:var(--mono);font-size:12px;color:var(--muted)">T&minus;2d</div>
-        </div>
-        <div class="row-card">
-          <div class="icon-tile">&#128085;</div>
-          <div class="lead"><div class="t">Deadstock Crew 003</div><div class="d">Mill surplus jersey &middot; locked until Batch 07 ships</div></div>
-          <div class="val" style="font-family:var(--mono);font-size:12px;color:var(--muted)">T&minus;9d</div>
+          <div class="icon-tile">&#127811;</div>
+          <div class="lead"><div class="t">Your loop is still active</div><div class="d">4 pieces in circulation &middot; 3 returns logged &middot; 2 trades completed</div></div>
+          <div class="val" style="font-family:var(--mono);font-size:12px;color:var(--diverted)">Live</div>
         </div>
       </section>
 
       <!-- ============ SCREEN 2 : DROP DETAIL ============ -->
       <section class="screen" id="s-drop">
-        <p class="eyebrow">Batch 07 &middot; Select by fit</p>
-        <h1 class="big">Overrun<br>Fleece 001</h1>
-        <p class="sub">180 units. Silhouette and size are guaranteed. The exact palette stays sealed until it reaches your door — a mystery, but with a story attached to every piece.</p>
+        <p class="eyebrow">Archived garments &middot; by season</p>
+        <h1 class="big">Drop<br>Catalogue</h1>
+        <p class="sub">Browse previous returns and seasonal archives. These are older garments re-entering circulation, not new production. Every item still carries its story, maker trace, and impact history.</p>
 
-        <div class="countdown" id="cdDrop" style="margin-top:18px">
-          <div class="cd-unit"><b>00</b><span>Hrs</span></div>
-          <div class="cd-unit"><b>00</b><span>Min</span></div>
-          <div class="cd-unit"><b>00</b><span>Sec</span></div>
+        <div class="priority" style="margin-top:18px">
+          <div class="fl">&#128307;</div>
+          <div>
+            <div class="t">Seasonal access</div>
+            <div class="d">Limited-stock boxes unlock for loyal members first. Once a seasonal run sells out, it is gone for that cycle.</div>
+          </div>
         </div>
-        <p class="cta-sub" style="text-align:left">Entries close when the clock hits zero &middot; packing starts immediately</p>
+
+        <div class="sec-head" style="margin-top:18px"><h2 class="sec">Catalog picks</h2><span class="hint">Curated editions</span></div>
+        <p class="sub" style="margin-top:6px;color:var(--muted);">Curated T‑shirt designs placed into the catalog below — each card shows the actual shirt photo and the maker story.</p>
+        <div class="grid2" style="margin-top:12px">
+          <article class="mk-card">
+            <div class="art catalog-art" data-cw="rust" data-size="M"></div>
+            <div class="cap"><div class="cw">Archive Fleece A · Rust</div><div class="own"><span class="av"></span>Designed by a less-privileged maker · 1 in stock</div><button class="trade-btn">Reserve</button></div>
+          </article>
+          <article class="mk-card">
+            <div class="art catalog-art" data-cw="olive" data-size="L"></div>
+            <div class="cap"><div class="cw">Patchwork Crew · Olive</div><div class="own"><span class="av"></span>Designed by a less-privileged maker · 2 left</div><button class="trade-btn">Limited stock</button></div>
+          </article>
+          <article class="mk-card">
+            <div class="art catalog-art" data-cw="char" data-size="S"></div>
+            <div class="cap"><div class="cw">Nightshift Tote · Char</div><div class="own"><span class="av"></span>Designed by a less-privileged maker · 1 left</div><button class="trade-btn">Reserve</button></div>
+          </article>
+          <article class="mk-card">
+            <div class="art catalog-art" data-cw="pet" data-size="M"></div>
+            <div class="cap"><div class="cw">Reworked PET Zip · Blue</div><div class="own"><span class="av"></span>Designed by a less-privileged maker</div><button class="trade-btn">View item</button></div>
+          </article>
+        </div>
 
         <div class="sec-head">
           <h2 class="sec">AI Stylist</h2>
           <button class="shuffle" id="shuffleBtn">&#8635; Re-roll</button>
         </div>
-        <p class="sub">Renders from this batch's dye lots, ranked against the Eco-Clip pieces already in your collection. Yours will be one of these families &mdash; not necessarily one of these exact renders.</p>
+        <p class="sub">This AI bot scans your body, style cues, and fit history to suggest the most compatible archive pieces. It helps you discover the pieces that feel like you before you commit to a blindbox.</p>
         <div class="stylist-src" id="stylistSrc"></div>
         <div class="carousel" id="carousel"></div>
         <div class="spectrum-note">
-          <span>&#127912;</span>
-          <div><b>Palette Spectrum:</b> colorway and pattern are randomized at packing from recovered dye lots. That randomness is what lets us use surplus material instead of dyeing to order.</div>
+          <span>&#128247;</span>
+          <div><b>Body scan styling:</b> point your camera at your silhouette, let the AI read your proportions and styling preferences, then match you to the most relevant archive editions.</div>
         </div>
 
-        <div class="sec-head"><h2 class="sec">Your fit &mdash; guaranteed</h2><span class="hint">Boxy hoodie</span></div>
+        <div class="sec-head"><h2 class="sec">Your fit &mdash; guaranteed</h2><span class="hint">S · M · L</span></div>
+        <p class="sub">Choose your size and lock the archive fit.</p>
         <div class="size-grid" id="sizeGrid"></div>
-        <div class="guarantee"><span class="ck">&#10003;</span> Size and silhouette never randomized. Only the palette is sealed.</div>
+        <div class="guarantee"><span class="ck">&#10003;</span> Vintage silhouettes are guaranteed. Stock is limited and seasonal windows close when the box is full.</div>
 
         <div class="sec-head"><h2 class="sec">Mandatory return</h2><span class="hint" id="gateStatus">Required</span></div>
         <div class="row-card gate" id="gateCard">
@@ -938,7 +970,7 @@ h2.sec{font-family:var(--display);font-size:14px;letter-spacing:.02em;text-trans
         </div>
         <div class="gate-pick" id="gatePick"></div>
 
-        <div class="sec-head"><h2 class="sec">Luck Multiplier</h2><span class="hint" id="luckStreakHint">Day 12 streak</span></div>
+        <div class="sec-head"><h2 class="sec">Luck multiplier &amp; discount</h2><span class="hint" id="luckStreakHint">Month 12 loyalty</span></div>
         <div class="luck" id="luckCard">
           <div class="luck-top">
             <div>
@@ -946,17 +978,20 @@ h2.sec{font-family:var(--display);font-size:14px;letter-spacing:.02em;text-trans
               <div class="cap">rare odds</div>
             </div>
             <div class="lead">
-              <div class="t">Priority access &amp; rarer pulls</div>
-              <div class="d" id="luckDesc">Tier 2 &mdash; you enter 90 seconds early, and every streak day pushes more of the rare dye lots into your side of the sort.</div>
+              <div class="t">More donated = more luck</div>
+              <div class="d" id="luckDesc">Because you have donated more than the average member, you receive a stronger luck multiplier and a better discount on curated archive box drops.</div>
             </div>
           </div>
           <div class="odds" id="oddsList"></div>
-          <div class="luck-foot"><span>&#128302;</span><div id="luckNext">Check in tomorrow for <b>1.65&times;</b>.</div></div>
+          <div class="luck-foot"><span>&#128302;</span><div id="luckNext">Keep your loyalty alive for <b>1.65&times;</b> and unlock more archive discounts.</div></div>
         </div>
 
         <div class="price-line">
-          <div class="p">480<s>EC &middot; or $48</s></div>
-          <div class="r">balance <span id="priceBal">1,240 EC</span><br>incl. return label &middot; +3.15 lbs diverted</div>
+          <div class="price-stack">
+            <div class="p">$48</div>
+            <div class="discount-note">Member price · was $68</div>
+          </div>
+          <div class="r">balance <span id="priceBal">1,240 EC</span><br>+3.5 shirts diverted</div>
         </div>
 
         <div class="cta-dock">
@@ -971,7 +1006,7 @@ h2.sec{font-family:var(--display);font-size:14px;letter-spacing:.02em;text-trans
         <div class="streak-hero">
           <div class="fl">&#128293;</div>
           <div class="n" id="streakBig">12</div>
-          <div class="l">days in the loop</div>
+          <div class="l">months in the loop</div>
           <div class="heatmap" id="heatmapLabels" style="margin-top:20px">
             <div class="hm-lbl">M</div><div class="hm-lbl">T</div><div class="hm-lbl">W</div>
             <div class="hm-lbl">T</div><div class="hm-lbl">F</div><div class="hm-lbl">S</div><div class="hm-lbl">S</div>
@@ -984,16 +1019,16 @@ h2.sec{font-family:var(--display);font-size:14px;letter-spacing:.02em;text-trans
           </div>
         </div>
 
-        <div class="sec-head"><h2 class="sec">Next milestone</h2><span class="hint">2 days out</span></div>
+        <div class="sec-head"><h2 class="sec">Next milestone</h2><span class="hint">2 months out</span></div>
         <div class="milestone">
           <div class="ms-bar"><div class="ms-fill" id="msFill" style="width:0"></div></div>
-          <div class="ms-row"><span id="msNow">Day 12</span><span>Day 14 &middot; Tier 3 priority</span></div>
+          <div class="ms-row"><span id="msNow">Month 12</span><span>Month 14 &middot; Tier 3 priority</span></div>
         </div>
 
-        <div class="tier hit"><div class="num">1</div><div><div class="t">Day 3 &mdash; stay in the circular queue</div><div class="d">You keep your place in every live micro-batch without losing your value</div></div></div>
-        <div class="tier hit"><div class="num">2</div><div><div class="t">Day 7 &mdash; early access to priority returns</div><div class="d">You get first notice on fresh batches and partner pickups</div></div></div>
-        <div class="tier locked"><div class="num">3</div><div><div class="t">Day 14 &mdash; 5-minute head start + size hold</div><div class="d">Your size is protected through the priority window</div></div></div>
-        <div class="tier locked"><div class="num">4</div><div><div class="t">Day 30 &mdash; palette veto</div><div class="d">You help decide which color families stay in circulation</div></div></div>
+        <div class="tier hit"><div class="num">1</div><div><div class="t">Month 3 &mdash; stay in the circular queue</div><div class="d">You keep your place in every live micro-batch without losing your value</div></div></div>
+        <div class="tier hit"><div class="num">2</div><div><div class="t">Month 7 &mdash; early access to priority returns</div><div class="d">You get first notice on fresh batches and partner pickups</div></div></div>
+        <div class="tier locked"><div class="num">3</div><div><div class="t">Month 14 &mdash; 5-minute head start + size hold</div><div class="d">Your size is protected through the priority window</div></div></div>
+        <div class="tier locked"><div class="num">4</div><div><div class="t">Month 30 &mdash; palette veto</div><div class="d">You help decide which color families stay in circulation</div></div></div>
 
         <div class="sec-head"><h2 class="sec">Streak protection</h2><span class="hint" id="freezeCount">2 freezes used</span></div>
         <div class="row-card" id="freezeRow">
@@ -1006,11 +1041,11 @@ h2.sec{font-family:var(--display);font-size:14px;letter-spacing:.02em;text-trans
 
       <!-- ============ SCREEN 5 : MARKETPLACE ============ -->
       <section class="screen" id="s-market">
-        <p class="eyebrow">P2P recirculation</p>
+        <p class="eyebrow">Blindbox resale</p>
         <h1 class="big">Marketplace</h1>
-        <p class="sub">Duplicates trade hand to hand instead of going back to landfill. Every swap keeps a piece in the loop and keeps your value in the community.</p>
+        <p class="sub">Sealed boxes from the archive are sold in small runs. The thrill is the same as a drop: you never know which palette, maker story, or archive fit you are about to claim.</p>
 
-        <div class="sec-head" style="margin-top:20px"><h2 class="sec">Filter</h2><span class="hint" id="mkCount">8 listings</span></div>
+        <div class="sec-head" style="margin-top:20px"><h2 class="sec">Filter</h2><span class="hint" id="mkCount">8 blindboxes</span></div>
         <div class="filters" id="sizeFilters">
           <button class="chip on" data-size="all">All sizes</button>
           <button class="chip" data-size="S">S</button>
@@ -1021,7 +1056,7 @@ h2.sec{font-family:var(--display);font-size:14px;letter-spacing:.02em;text-trans
 
         <div class="grid2" id="mkGrid"></div>
 
-        <div class="cta-dock"><button class="btn ghost" id="listDupBtn">List a duplicate from my collection</button></div>
+        <div class="cta-dock"><button class="btn ghost" id="listDupBtn">List a blindbox from my collection</button></div>
       </section>
 
       <!-- ============ SCREEN 6 : PROFILE ============ -->
@@ -1048,7 +1083,7 @@ h2.sec{font-family:var(--display);font-size:14px;letter-spacing:.02em;text-trans
         <div class="sec-head"><h2 class="sec">Streak status</h2><span class="hint">Tier 2</span></div>
         <div class="row-card">
           <div class="icon-tile">&#128293;</div>
-          <div class="lead"><div class="t"><span id="profStreak">12</span>-day streak</div><div class="d">Next check-in resets in 6h 12m</div></div>
+          <div class="lead"><div class="t"><span id="profStreak">12</span>-month loop</div><div class="d">Next donation window opens in 29 days</div></div>
           <div class="val" style="color:var(--flame)">T2</div>
         </div>
         <div class="row-card">
@@ -1411,10 +1446,10 @@ function tickClock(){
   var t = Math.floor(left / 1000);
   var h = Math.floor(t / 3600), m = Math.floor(t % 3600 / 60), s = t % 60;
   var urgent = left < 5 * 60 * 1000;
-  paintCd($("cdHome"), h, m, s, urgent);
-  paintCd($("cdDrop"), h, m, s, urgent);
+  if($("cdHome")) paintCd($("cdHome"), h, m, s, urgent);
+  if($("cdDrop")) paintCd($("cdDrop"), h, m, s, urgent);
   var watchers = 312 + Math.floor(Math.sin(Date.now() / 9000) * 26) + Math.floor(Math.random() * 4);
-  $("entrantCount").textContent = watchers + " watching";
+  if($("entrantCount")) $("entrantCount").textContent = watchers + " watching";
   var f = $("flashCd");
   if(f) f.textContent = String(h * 60 + m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
 }
@@ -1422,6 +1457,19 @@ function tickClock(){
 /* ---------------- possibility carousel ---------------- */
 function stylistSources(){
   return state.owned.slice(-4);
+}
+function renderCatalogArt(){
+  document.querySelectorAll(".catalog-art").forEach(function(el){
+    var cw = el.getAttribute("data-cw");
+    var size = el.getAttribute("data-size") || "M";
+    var image = el.getAttribute("data-image");
+    if (image) {
+      el.style.backgroundImage = "linear-gradient(180deg, rgba(16,14,20,0.08), rgba(16,14,20,0.18)), url('" + image + "')";
+      el.innerHTML = '<span class="sz">' + size + '</span>';
+      return;
+    }
+    el.innerHTML = garment(cw, 104) + '<span class="sz">' + size + '</span>';
+  });
 }
 function renderCarousel(){
   var src = stylistSources();
@@ -1718,10 +1766,10 @@ function renderStreak(){
   }).join("");
   var pct = Math.min(100, (state.streak / 14) * 100);
   $("msFill").style.width = pct + "%";
-  $("msNow").textContent = "Day " + state.streak;
+  $("msNow").textContent = "Month " + state.streak;
   $("freezeCount").textContent = state.freezesUsed + " freezes used";
   $("freezeStatus").textContent = state.frozen
-    ? "Freeze active — covers your next missed day"
+    ? "Freeze active — covers your next missed donation month"
     : "No active freeze · " + state.freezesUsed + " used this season";
   var chk = $("checkinRow");
   if(chk) chk.style.display = state.checkedIn ? "none" : "";
@@ -1731,12 +1779,12 @@ function renderStreak(){
 $("s-streak").querySelector(".streak-hero").insertAdjacentHTML("afterend",
   '<div class="row-card gate" id="checkinRow" style="margin-top:14px">'+
     '<div class="icon-tile">&#9889;</div>'+
-    '<div class="lead"><div class="t">Check in for today</div><div class="d">Keeps the streak alive and holds your Tier 2 priority window.</div></div>'+
+    '<div class="lead"><div class="t">Donate once a month to keep your loop active</div><div class="d">A monthly donation keeps your place in the circular queue and protects your seasonal access.</div></div>'+
     '<button class="trade-btn" id="checkinBtn">Check in</button>'+
   '</div>'+
   '<div class="row-card gate done" id="checkinDone" style="margin-top:14px;display:none">'+
     '<div class="icon-tile">&#10003;</div>'+
-    '<div class="lead"><div class="t">Checked in today</div><div class="d">Next check-in window opens in 6h 12m.</div></div>'+
+    '<div class="lead"><div class="t">Monthly donation active</div><div class="d">Your next donation window opens in 29 days.</div></div>'+
   '</div>');
 
 function countUp(el, from, to, ms){
@@ -1763,7 +1811,7 @@ $("checkinBtn").addEventListener("click", function(){
     [{transform:"scale(1)"},{transform:"scale(1.16)"},{transform:"scale(1)"}],
     {duration:620, easing:"cubic-bezier(.2,1.3,.4,1)"}
   );
-  toast("Day " + state.streak + " — 1 more day to Tier 3", "&#128293;");
+  toast("Loyalty active — Month " + state.streak + " keeps your seasonal access open", "&#128293;");
 });
 
 /* ---------------- freeze modal ---------------- */
@@ -1778,7 +1826,7 @@ function freezeFlow(){
   if(state.frozen){ toast("Freeze already active on this streak", "&#10052;"); return; }
   openSheet(
     '<h3>Freeze your streak</h3>'+
-    '<p>One freeze covers a single missed day. Your Day '+state.streak+' streak and Tier 2 priority stay exactly where they are.</p>'+
+    '<p>One freeze covers a single missed donation month. Your Month '+state.streak+' streak and Tier 2 priority stay exactly where they are.</p>'+
     '<div class="price">$2.99</div>'+
     '<p style="font-size:11.5px">One-time · non-recurring · 1 freeze per 30 days</p>'+
     '<div class="btn-row"><button class="btn ghost" id="sheetCash" style="flex:1">Pay $2.99</button>'+
@@ -1788,9 +1836,9 @@ function freezeFlow(){
   );
   function doFreeze(useEc){
     state.frozen = true; state.freezesUsed++;
-    if(useEc) ecSpend("Streak freeze &mdash; day " + state.streak, 30, "&#10052;");
+    if(useEc) ecSpend("Streak freeze &mdash; month " + state.streak, 30, "&#10052;");
     closeSheet(); renderStreak();
-    toast("Streak frozen — Day " + state.streak + " is protected", "&#10052;");
+    toast("Streak frozen — Month " + state.streak + " is protected", "&#10052;");
   }
   $("sheetCash").addEventListener("click", function(){ doFreeze(false); });
   $("sheetBuy").addEventListener("click", function(){ doFreeze(true); });
@@ -2039,7 +2087,7 @@ $("trackBack").addEventListener("click", function(){ go("s-home"); });
 function renderLuck(){
   var m = luckMult(), o = tierOdds();
   $("luckMult").innerHTML = m.toFixed(2) + "&times;";
-  $("luckStreakHint").textContent = "Day " + state.streak + " streak";
+  $("luckStreakHint").textContent = "Month " + state.streak + " loyalty";
   var rows = [
     {n:"Ultra-rare", base:TIER_BASE.ultra, now:o.ultra},
     {n:"Rare",       base:TIER_BASE.rare,  now:o.rare},
@@ -2056,9 +2104,9 @@ function renderLuck(){
       '<span class="pc">'+(boosted?'<s>'+r.base.toFixed(1)+'</s>':'')+r.now.toFixed(1)+'%</span></div>';
   }).join("");
   var next = 1 + (state.streak + 1) * 0.05;
-  $("luckNext").innerHTML = "Check in tomorrow for <b>" + next.toFixed(2) + "&times;</b> &mdash; Day 14 unlocks Tier 3, a 5-minute head start and a size hold.";
+  $("luckNext").innerHTML = "Keep your loyalty alive for <b>" + next.toFixed(2) + "&times;</b> &mdash; Month 14 unlocks Tier 3, a 5-minute head start and a seasonal box hold.";
   var sub = $("homeCtaSub");
-  if(sub) sub.innerHTML = "Day " + state.streak + " streak &middot; " + m.toFixed(2) + "&times; luck multiplier &middot; 480 EC or $48";
+  if(sub) sub.innerHTML = "Month " + state.streak + " loyalty &middot; " + m.toFixed(2) + "&times; luck multiplier &middot; 480 EC or $48";
 }
 
 /* ---------------- e-credit wallet + missions ---------------- */
@@ -2128,6 +2176,7 @@ function renderMissions(){
 $("heroArt").innerHTML = garment("rust", 158);
 renderMeter();
 pushFeed(1.2);
+renderCatalogArt();
 renderCarousel();
 renderSizes();
 renderGate();
