@@ -500,22 +500,7 @@ h2.sec{font-family:var(--display);font-size:14px;letter-spacing:.02em;text-trans
   transition:all .16s ease;
 }
 .chip.on{background:var(--paper);color:#140F1A;border-color:var(--paper);font-weight:500}
-.mini-look-strip{
-  display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));gap:10px;margin:12px 0 0;
-}
-/* Hide the legacy top photo preview row to avoid duplicate visuals */
-.mini-look-strip{display:none !important}
-}
-.mini-look-card{
-  border-radius:14px;overflow:hidden;border:1px solid var(--line-soft);background:var(--surface);
-  display:flex;flex-direction:column;min-width:0;
-}
-.mini-look-card .img{
-  height:118px;background-size:cover;background-position:center;background-repeat:no-repeat;position:relative;
-  background-color:#171320;
-}
-.mini-look-card .meta{padding:8px 8px 9px}
-.mini-look-card .meta .name{font-size:10.5px;line-height:1.25;letter-spacing:-.01em;color:var(--paper);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* Legacy mini-look-strip and mini-look-card removed to avoid top preview row */
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
 .mk-card{
   border-radius:15px;overflow:hidden;border:1px solid var(--line-soft);background:var(--surface);
