@@ -503,6 +503,9 @@ h2.sec{font-family:var(--display);font-size:14px;letter-spacing:.02em;text-trans
 .mini-look-strip{
   display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));gap:10px;margin:12px 0 0;
 }
+/* Hide the legacy top photo preview row to avoid duplicate visuals */
+.mini-look-strip{display:none !important}
+}
 .mini-look-card{
   border-radius:14px;overflow:hidden;border:1px solid var(--line-soft);background:var(--surface);
   display:flex;flex-direction:column;min-width:0;
