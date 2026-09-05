@@ -96,6 +96,7 @@ button{font-family:inherit;color:inherit;cursor:pointer}
   background:linear-gradient(180deg,var(--ink-2),rgba(23,20,28,.86));
   position:relative;z-index:20;
 }
+.update-badge{margin-left:8px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.04);font-family:var(--mono);font-size:11px;color:var(--muted);}
 .wordmark{
   font-family:var(--display);font-size:19px;letter-spacing:-.03em;text-transform:uppercase;
   margin-right:auto;display:flex;align-items:center;gap:7px;
@@ -844,6 +845,7 @@ h2.sec{font-family:var(--display);font-size:14px;letter-spacing:.02em;text-trans
 
     <header class="topnav">
       <div class="wordmark"><span class="loop"></span>Dopa-Loop</div>
+      <div class="update-badge" id="updateBadge">Updated: 2026-09-05 06:45 UTC</div>
       <button class="streak-badge" id="streakBadge" aria-label="Streak tracker">
         <span class="fl">&#128293;</span><span id="streakDays">12</span>
       </button>
